@@ -12,3 +12,10 @@ export function findAll(): Promise<IUser[]> {
     resolve(users)
   })
 }
+
+export function findById(id: string): Promise<IUser | undefined> {
+  return new Promise((resolve) => {
+    const user = users.find((user) => user.id === id)
+    resolve(user)
+  })
+}
