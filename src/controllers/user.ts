@@ -1,4 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http'
+import { getPostData } from '../helpers/getPostData'
 import * as User from '../models/user'
 
 export async function getUsers(req: IncomingMessage, res: ServerResponse) {
@@ -33,6 +34,26 @@ export async function getUser(
       })
       res.end(JSON.stringify(user))
     }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function createUser(req: IncomingMessage, res: ServerResponse) {
+  try {
+    const body = await getPostData(req)
+    const { username, age, hobbies } = body
+
+    const rawUser = {
+      username,
+      age,
+      hobbies,
+    }
+
+    const createdNewUser = await User.create(rawUser)
+
+    res.writeHead(201, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify(createdNewUser))
   } catch (error) {
     console.error(error)
   }
