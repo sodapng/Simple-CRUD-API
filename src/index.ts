@@ -14,7 +14,7 @@ import { isUUID } from './validators/isUUID'
 
 dotenv.config({ path: resolve(cwd(), '.env') })
 
-const server = createServer((req, res) => {
+export const server = createServer((req, res) => {
   try {
     if (!req.url) return
 
@@ -24,7 +24,7 @@ const server = createServer((req, res) => {
       if (req.method === 'POST') return createUser(req, res)
     }
 
-    if (/\/api\/users\/\w+/.test(req.url)) {
+    if (/^\/api\/users\/[\w-]+$/.test(req.url)) {
       const id = req.url.split('/')[3]
 
       if (!isUUID(id)) return sendJSON(400, { message: 'invalid id' }, res)
