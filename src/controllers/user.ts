@@ -9,6 +9,13 @@ export async function getUsers(req: IncomingMessage, res: ServerResponse) {
     sendJSON(200, foundUsers, res)
   } catch (error) {
     console.error(error)
+    sendJSON(
+      500,
+      {
+        message: 'Oops, something went wrong. Try to refresh this page.',
+      },
+      res
+    )
   }
 }
 
@@ -25,6 +32,13 @@ export async function getUser(
     sendJSON(200, foundUser, res)
   } catch (error) {
     console.error(error)
+    sendJSON(
+      500,
+      {
+        message: 'Oops, something went wrong. Try to refresh this page.',
+      },
+      res
+    )
   }
 }
 
@@ -50,6 +64,13 @@ export async function createUser(req: IncomingMessage, res: ServerResponse) {
     sendJSON(201, createdNewUser, res)
   } catch (error) {
     console.error(error)
+    sendJSON(
+      500,
+      {
+        message: 'Oops, something went wrong. Try to refresh this page.',
+      },
+      res
+    )
   }
 }
 
@@ -76,6 +97,13 @@ export async function updateUser(
     sendJSON(200, updatedUser, res)
   } catch (error) {
     console.error(error)
+    sendJSON(
+      500,
+      {
+        message: 'Oops, something went wrong. Try to refresh this page.',
+      },
+      res
+    )
   }
 }
 
@@ -93,5 +121,12 @@ export async function deleteUser(
     sendJSON(204, { message: `user ${id} removed` }, res)
   } catch (error) {
     console.error(error)
+    sendJSON(
+      500,
+      {
+        message: 'Oops, something went wrong. Try to refresh this page.',
+      },
+      res
+    )
   }
 }

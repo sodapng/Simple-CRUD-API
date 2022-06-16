@@ -19,11 +19,25 @@ export async function getPostData(
           try {
             resolve(JSON.parse(body))
           } catch (error) {
-            sendJSON(400, { message: 'bad request' }, res)
+            sendJSON(
+              500,
+              {
+                message:
+                  'Oops, something went wrong. Try to refresh this page.',
+              },
+              res
+            )
             reject(error)
           }
         })
     } catch (error) {
+      sendJSON(
+        500,
+        {
+          message: 'Oops, something went wrong. Try to refresh this page.',
+        },
+        res
+      )
       reject(error)
     }
   })
