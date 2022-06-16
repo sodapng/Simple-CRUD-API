@@ -4,12 +4,12 @@ import * as User from '../models/user'
 
 export async function getUsers(req: IncomingMessage, res: ServerResponse) {
   try {
-    const users = await User.findAll()
+    const foundUsers = await User.findAll()
 
     res.writeHead(200, {
       'Content-Type': 'application/json',
     })
-    res.end(JSON.stringify(users))
+    res.end(JSON.stringify(foundUsers))
   } catch (error) {
     console.error(error)
   }
@@ -21,9 +21,9 @@ export async function getUser(
   id: string
 ) {
   try {
-    const user = await User.findById(id)
+    const foundUser = await User.findById(id)
 
-    if (!user) {
+    if (!foundUser) {
       res.writeHead(404, {
         'Content-Type': 'application/json',
       })
@@ -32,7 +32,7 @@ export async function getUser(
       res.writeHead(200, {
         'Content-Type': 'application/json',
       })
-      res.end(JSON.stringify(user))
+      res.end(JSON.stringify(foundUser))
     }
   } catch (error) {
     console.error(error)

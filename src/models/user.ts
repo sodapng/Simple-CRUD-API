@@ -1,6 +1,4 @@
-import _users from '../../data/user.json'
 import { v4 as uuidv4 } from 'uuid'
-import { writeDataToFile } from '../helpers/writeDataToFile'
 
 export interface IUser {
   id?: string
@@ -9,7 +7,7 @@ export interface IUser {
   hobbies: string[] | []
 }
 
-const users: IUser[] = _users
+const users: IUser[] = []
 
 export function findAll(): Promise<IUser[]> {
   return new Promise((resolve) => {
@@ -19,16 +17,15 @@ export function findAll(): Promise<IUser[]> {
 
 export function findById(id: string): Promise<IUser | undefined> {
   return new Promise((resolve) => {
-    const user = users.find((user) => user.id === id)
-    resolve(user)
+    const foundUser = users.find((user) => user.id === id)
+    resolve(foundUser)
   })
 }
 
-export function create(user: IUser): Promise<IUser> {
+export function create(rawUser: IUser): Promise<IUser> {
   return new Promise((resolve) => {
-    const newUser = { id: uuidv4(), ...user }
-    users.push(newUser)
-    writeDataToFile('./data/user.json', users)
-    resolve(newUser)
+    const createdNewUser = { id: uuidv4(), ...rawUser }
+    users.push(createdNewUser)
+    resolve(createdNewUser)
   })
 }
