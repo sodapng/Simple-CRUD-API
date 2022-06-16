@@ -9,31 +9,33 @@ import {
   getUsers,
   updateUser,
 } from './controllers/user'
+import { sendJSON } from './helpers/sendJSON'
+import { isUUID } from './validators/isUUID'
 
 dotenv.config({ path: resolve(cwd(), '.env') })
 
 const server = createServer((req, res) => {
   if (!req.url) return
 
-  if (req.url === '/api/users' && req.method === 'GET') {
-    getUsers(req, res)
-  } else if (/\/api\/users\/\w+/.test(req.url) && req.method === 'GET') {
-    const id = req.url.split('/')[3]
-    getUser(req, res, id)
-  } else if (req.url === '/api/users' && req.method === 'POST') {
-    createUser(req, res)
-  } else if (/\/api\/users\/\w+/.test(req.url) && req.method === 'PUT') {
-    const id = req.url.split('/')[3]
-    updateUser(req, res, id)
-  } else if (/\/api\/users\/\w+/.test(req.url) && req.method === 'DELETE') {
-    const id = req.url.split('/')[3]
-    deleteUser(req, res, id)
-  } else {
-    res.writeHead(404, {
-      'Content-Type': 'application/json',
-    })
-    res.end(JSON.stringify({ message: 'not found' }))
+  if (req.url === '/api/users') {
+    if (req.method === 'GET') return getUsers(req, res)
+
+    if (req.method === 'POST') return createUser(req, res)
   }
+
+  if (/\/api\/users\/\w+/.test(req.url)) {
+    const id = req.url.split('/')[3]
+
+    if (!isUUID(id)) return sendJSON(400, 'invalid uuid', res)
+
+    if (req.method === 'GET') return getUser(req, res, id)
+
+    if (req.method === 'PUT') return updateUser(req, res, id)
+
+    if (req.method === 'DELETE') return deleteUser(req, res, id)
+  }
+
+  sendJSON(404, 'not found', res)
 })
 
 const port = process.env.PORT || 1337

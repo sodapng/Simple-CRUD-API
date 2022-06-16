@@ -28,12 +28,12 @@ export async function getUser(
         'Content-Type': 'application/json',
       })
       res.end(JSON.stringify({ message: 'user not found' }))
-    } else {
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-      })
-      res.end(JSON.stringify(foundUser))
     }
+
+    res.writeHead(200, {
+      'Content-Type': 'application/json',
+    })
+    res.end(JSON.stringify(foundUser))
   } catch (error) {
     console.error(error)
   }
