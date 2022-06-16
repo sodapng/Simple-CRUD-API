@@ -29,3 +29,11 @@ export function create(rawUser: IUser): Promise<IUser> {
     resolve(createdNewUser)
   })
 }
+
+export function update(id: string, rawUser: IUser): Promise<IUser> {
+  return new Promise((resolve) => {
+    const index = users.findIndex((user) => user.id === id)
+    users[index] = { id, ...rawUser }
+    resolve(users[index])
+  })
+}

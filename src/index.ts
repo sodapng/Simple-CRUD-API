@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv'
 import { createServer } from 'http'
 import { resolve } from 'path'
 import { cwd } from 'process'
-import { createUser, getUser, getUsers } from './controllers/user'
+import { createUser, getUser, getUsers, updateUser } from './controllers/user'
 
 dotenv.config({ path: resolve(cwd(), '.env') })
 
@@ -16,6 +16,9 @@ const server = createServer((req, res) => {
     getUser(req, res, id)
   } else if (req.url === '/api/users' && req.method === 'POST') {
     createUser(req, res)
+  } else if (/\/api\/users\/\w+/.test(req.url) && req.method === 'PUT') {
+    const id = req.url.split('/')[3]
+    updateUser(req, res, id)
   } else {
     res.end()
   }

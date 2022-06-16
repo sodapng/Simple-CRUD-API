@@ -58,3 +58,36 @@ export async function createUser(req: IncomingMessage, res: ServerResponse) {
     console.error(error)
   }
 }
+
+export async function updateUser(
+  req: IncomingMessage,
+  res: ServerResponse,
+  id: string
+) {
+  try {
+    const foundUser = await User.findById(id)
+
+    if (!foundUser) {
+      res.writeHead(404, {
+        'Content-Type': 'application/json',
+      })
+      res.end(JSON.stringify({ message: 'user not found' }))
+    } else {
+      const body = await getPostData(req)
+      const { username, age, hobbies } = body
+
+      const rawUser = {
+        username: username || foundUser.username,
+        age: age || foundUser.age,
+        hobbies: hobbies || foundUser.hobbies,
+      }
+
+      const updatedUser = await User.update(id, rawUser)
+
+      res.writeHead(200, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify(updatedUser))
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
