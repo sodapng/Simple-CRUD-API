@@ -30,8 +30,15 @@ export async function getUser(
 
 export async function createUser(req: IncomingMessage, res: ServerResponse) {
   try {
-    const body = await getPostData(req)
+    const body = await getPostData(req, res)
     const { username, age, hobbies } = body
+
+    if (!username || !age || !hobbies)
+      return sendJSON(
+        400,
+        { message: 'body does not contain required fields' },
+        res
+      )
 
     const rawUser = {
       username,
@@ -56,7 +63,7 @@ export async function updateUser(
 
     if (!foundUser) return sendJSON(404, { message: 'user not found' }, res)
 
-    const body = await getPostData(req)
+    const body = await getPostData(req, res)
     const { username, age, hobbies } = body
 
     const rawUser = {

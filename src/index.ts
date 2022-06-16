@@ -26,7 +26,7 @@ const server = createServer((req, res) => {
   if (/\/api\/users\/\w+/.test(req.url)) {
     const id = req.url.split('/')[3]
 
-    if (!isUUID(id)) return sendJSON(400, 'invalid uuid', res)
+    if (!isUUID(id)) return sendJSON(400, { message: 'invalid uuid' }, res)
 
     if (req.method === 'GET') return getUser(req, res, id)
 

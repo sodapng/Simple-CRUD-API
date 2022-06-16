@@ -1,7 +1,11 @@
-import { IncomingMessage } from 'http'
+import { IncomingMessage, ServerResponse } from 'http'
 import { IUser } from '../models/user'
+import { sendJSON } from './sendJSON'
 
-export async function getPostData(req: IncomingMessage): Promise<IUser> {
+export async function getPostData(
+  req: IncomingMessage,
+  res: ServerResponse
+): Promise<IUser> {
   return new Promise((resolve, reject) => {
     try {
       let body = ''
@@ -12,7 +16,12 @@ export async function getPostData(req: IncomingMessage): Promise<IUser> {
           body += chunk
         })
         .on('end', () => {
-          resolve(JSON.parse(body))
+          try {
+            resolve(JSON.parse(body))
+          } catch (error) {
+            sendJSON(400, { message: 'bad request' }, res)
+            reject(error)
+          }
         })
     } catch (error) {
       reject(error)
