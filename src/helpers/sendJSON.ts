@@ -1,8 +1,12 @@
 import { ServerResponse } from 'http'
 
-export function sendJSON(status: number, message: string, res: ServerResponse) {
+export function sendJSON(
+  status: number,
+  message: unknown,
+  res: ServerResponse
+) {
   res.writeHead(status, {
     'Content-Type': 'application/json',
   })
-  res.end(JSON.stringify({ message }))
+  res.end(JSON.stringify(message))
 }

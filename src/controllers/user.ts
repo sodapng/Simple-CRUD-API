@@ -1,15 +1,12 @@
 import { IncomingMessage, ServerResponse } from 'http'
 import { getPostData } from '../helpers/getPostData'
+import { sendJSON } from '../helpers/sendJSON'
 import * as User from '../models/user'
 
 export async function getUsers(req: IncomingMessage, res: ServerResponse) {
   try {
     const foundUsers = await User.findAll()
-
-    res.writeHead(200, {
-      'Content-Type': 'application/json',
-    })
-    res.end(JSON.stringify(foundUsers))
+    sendJSON(200, foundUsers, res)
   } catch (error) {
     console.error(error)
   }
@@ -23,17 +20,9 @@ export async function getUser(
   try {
     const foundUser = await User.findById(id)
 
-    if (!foundUser) {
-      res.writeHead(404, {
-        'Content-Type': 'application/json',
-      })
-      res.end(JSON.stringify({ message: 'user not found' }))
-    }
+    if (!foundUser) return sendJSON(404, { message: 'user not found' }, res)
 
-    res.writeHead(200, {
-      'Content-Type': 'application/json',
-    })
-    res.end(JSON.stringify(foundUser))
+    sendJSON(200, foundUser, res)
   } catch (error) {
     console.error(error)
   }
@@ -51,9 +40,7 @@ export async function createUser(req: IncomingMessage, res: ServerResponse) {
     }
 
     const createdNewUser = await User.create(rawUser)
-
-    res.writeHead(201, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify(createdNewUser))
+    sendJSON(201, createdNewUser, res)
   } catch (error) {
     console.error(error)
   }
@@ -67,26 +54,19 @@ export async function updateUser(
   try {
     const foundUser = await User.findById(id)
 
-    if (!foundUser) {
-      res.writeHead(404, {
-        'Content-Type': 'application/json',
-      })
-      res.end(JSON.stringify({ message: 'user not found' }))
-    } else {
-      const body = await getPostData(req)
-      const { username, age, hobbies } = body
+    if (!foundUser) return sendJSON(404, { message: 'user not found' }, res)
 
-      const rawUser = {
-        username: username || foundUser.username,
-        age: age || foundUser.age,
-        hobbies: hobbies || foundUser.hobbies,
-      }
+    const body = await getPostData(req)
+    const { username, age, hobbies } = body
 
-      const updatedUser = await User.updateById(id, rawUser)
-
-      res.writeHead(200, { 'Content-Type': 'application/json' })
-      res.end(JSON.stringify(updatedUser))
+    const rawUser = {
+      username: username || foundUser.username,
+      age: age || foundUser.age,
+      hobbies: hobbies || foundUser.hobbies,
     }
+
+    const updatedUser = await User.updateById(id, rawUser)
+    sendJSON(200, updatedUser, res)
   } catch (error) {
     console.error(error)
   }
@@ -100,18 +80,10 @@ export async function deleteUser(
   try {
     const foundUser = await User.findById(id)
 
-    if (!foundUser) {
-      res.writeHead(404, {
-        'Content-Type': 'application/json',
-      })
-      res.end(JSON.stringify({ message: 'user not found' }))
-    } else {
-      await User.deleteById(id)
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-      })
-      res.end(JSON.stringify({ message: `user ${id} removed` }))
-    }
+    if (!foundUser) return sendJSON(404, { message: 'user not found' }, res)
+
+    await User.deleteById(id)
+    sendJSON(204, { message: `user ${id} removed` }, res)
   } catch (error) {
     console.error(error)
   }

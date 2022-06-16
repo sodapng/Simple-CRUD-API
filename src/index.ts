@@ -35,7 +35,7 @@ const server = createServer((req, res) => {
     if (req.method === 'DELETE') return deleteUser(req, res, id)
   }
 
-  sendJSON(404, 'not found', res)
+  sendJSON(404, { message: 'not found' }, res)
 })
 
 const port = process.env.PORT || 1337
