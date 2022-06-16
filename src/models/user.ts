@@ -7,7 +7,7 @@ export interface IUser {
   hobbies: string[] | []
 }
 
-const users: IUser[] = []
+let users: IUser[] = []
 
 export function findAll(): Promise<IUser[]> {
   return new Promise((resolve) => {
@@ -30,10 +30,17 @@ export function create(rawUser: IUser): Promise<IUser> {
   })
 }
 
-export function update(id: string, rawUser: IUser): Promise<IUser> {
+export function updateById(id: string, rawUser: IUser): Promise<IUser> {
   return new Promise((resolve) => {
     const index = users.findIndex((user) => user.id === id)
     users[index] = { id, ...rawUser }
     resolve(users[index])
+  })
+}
+
+export function deleteById(id: string): Promise<true> {
+  return new Promise((resolve) => {
+    users = users.filter((user) => user.id !== id)
+    resolve(true)
   })
 }

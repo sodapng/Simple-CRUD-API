@@ -82,10 +82,35 @@ export async function updateUser(
         hobbies: hobbies || foundUser.hobbies,
       }
 
-      const updatedUser = await User.update(id, rawUser)
+      const updatedUser = await User.updateById(id, rawUser)
 
       res.writeHead(200, { 'Content-Type': 'application/json' })
       res.end(JSON.stringify(updatedUser))
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function deleteUser(
+  req: IncomingMessage,
+  res: ServerResponse,
+  id: string
+) {
+  try {
+    const foundUser = await User.findById(id)
+
+    if (!foundUser) {
+      res.writeHead(404, {
+        'Content-Type': 'application/json',
+      })
+      res.end(JSON.stringify({ message: 'user not found' }))
+    } else {
+      await User.deleteById(id)
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+      })
+      res.end(JSON.stringify({ message: `user ${id} removed` }))
     }
   } catch (error) {
     console.error(error)
