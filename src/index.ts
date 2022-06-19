@@ -41,7 +41,7 @@ export const server = createServer((req, res) => {
     sendJSON(
       500,
       {
-        message: 'Oops, something went wrong. Try to refresh this page.',
+        error: 'Oops, something went wrong. Try to refresh this page.',
       },
       res
     )

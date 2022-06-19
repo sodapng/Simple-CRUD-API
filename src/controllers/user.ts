@@ -11,7 +11,7 @@ export async function getUsers(req: IncomingMessage, res: ServerResponse) {
     sendJSON(
       500,
       {
-        message: 'Oops, something went wrong. Try to refresh this page.',
+        error: 'Oops, something went wrong. Try to refresh this page.',
       },
       res
     )
@@ -33,7 +33,7 @@ export async function getUser(
     sendJSON(
       500,
       {
-        message: 'Oops, something went wrong. Try to refresh this page.',
+        error: 'Oops, something went wrong. Try to refresh this page.',
       },
       res
     )
@@ -64,7 +64,7 @@ export async function createUser(req: IncomingMessage, res: ServerResponse) {
     sendJSON(
       500,
       {
-        message: 'Oops, something went wrong. Try to refresh this page.',
+        error: 'Oops, something went wrong. Try to refresh this page.',
       },
       res
     )
@@ -104,7 +104,7 @@ export async function updateUser(
     sendJSON(
       500,
       {
-        message: 'Oops, something went wrong. Try to refresh this page.',
+        error: 'Oops, something went wrong. Try to refresh this page.',
       },
       res
     )
@@ -127,7 +127,7 @@ export async function deleteUser(
     sendJSON(
       500,
       {
-        message: 'Oops, something went wrong. Try to refresh this page.',
+        error: 'Oops, something went wrong. Try to refresh this page.',
       },
       res
     )
