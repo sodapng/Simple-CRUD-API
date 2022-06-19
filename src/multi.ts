@@ -14,9 +14,9 @@ void (async () => {
       const worker = cluster.fork()
       workers.push(worker)
 
-      worker.on('message', (msg) => {
+      worker.on('message', ({ pid, users }) => {
         workers.forEach((el) => {
-          !el.isDead() && el.send(msg)
+          !el.isDead() && el.process.pid !== pid && el.send(users)
         })
       })
     }

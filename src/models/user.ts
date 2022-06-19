@@ -1,3 +1,4 @@
+import { pid } from 'process'
 import { v4 as uuidv4 } from 'uuid'
 
 export interface IUser {
@@ -9,13 +10,13 @@ export interface IUser {
 
 let users: IUser[] = []
 
-process.on('message', (msg: any) => {
+process.on('message', (msg: IUser[]) => {
   users = msg
 })
 
 export function findAll(): Promise<IUser[]> {
   return new Promise((resolve) => {
-    process.send?.(users)
+    process.send?.({ users, pid })
     resolve(users)
   })
 }
@@ -23,7 +24,7 @@ export function findAll(): Promise<IUser[]> {
 export function findById(id: string): Promise<IUser | undefined> {
   return new Promise((resolve) => {
     const foundUser = users.find((user) => user.id === id)
-    process.send?.(users)
+    process.send?.({ users, pid })
     resolve(foundUser)
   })
 }
@@ -32,7 +33,7 @@ export function create(rawUser: IUser): Promise<IUser> {
   return new Promise((resolve) => {
     const createdNewUser = { id: uuidv4(), ...rawUser }
     users.push(createdNewUser)
-    process.send?.(users)
+    process.send?.({ users, pid })
     resolve(createdNewUser)
   })
 }
@@ -41,7 +42,7 @@ export function updateById(id: string, rawUser: IUser): Promise<IUser> {
   return new Promise((resolve) => {
     const index = users.findIndex((user) => user.id === id)
     users[index] = { id, ...rawUser }
-    process.send?.(users)
+    process.send?.({ users, pid })
     resolve(users[index])
   })
 }
@@ -49,7 +50,7 @@ export function updateById(id: string, rawUser: IUser): Promise<IUser> {
 export function deleteById(id: string): Promise<true> {
   return new Promise((resolve) => {
     users = users.filter((user) => user.id !== id)
-    process.send?.(users)
+    process.send?.({ users, pid })
     resolve(true)
   })
 }
