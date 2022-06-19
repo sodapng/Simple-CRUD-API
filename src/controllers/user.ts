@@ -84,6 +84,14 @@ export async function updateUser(
     const body = await getPostData(req, res)
     const { username, age, hobbies } = body
 
+    if (!username && !age && !hobbies) {
+      return sendJSON(
+        400,
+        { message: 'body does not contain required fields' },
+        res
+      )
+    }
+
     const rawUser = {
       username: username || foundUser.username,
       age: age || foundUser.age,
