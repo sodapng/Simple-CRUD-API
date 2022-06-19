@@ -1,4 +1,4 @@
-import cluster from 'cluster'
+import cluster, { Worker } from 'cluster'
 import { cpus } from 'os'
 import { pid } from 'process'
 
@@ -8,11 +8,24 @@ void (async () => {
 
     console.log(`Master pid: ${pid}`)
     console.log(`Starting ${numOfCpus} forks`)
+    const workers: Worker[] = []
 
-    for (let i = 0; i < numOfCpus; i++) cluster.fork()
+    for (let i = 0; i < numOfCpus; i++) {
+      const worker = cluster.fork()
+      workers.push(worker)
+
+      worker.on('message', (msg) => {
+        workers.forEach((el) => {
+          !el.isDead() && el.send(msg)
+        })
+      })
+    }
   } else {
     const id = cluster.worker?.id
-    await import('./index')
+    const { server } = await import('./index')
+    server.on('request', (req, res) => {
+      res.setHeader('pid', pid)
+    })
     console.log(`Worker: ${id}, pid: ${pid}`)
   }
 })()
