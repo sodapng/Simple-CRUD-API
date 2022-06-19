@@ -12,9 +12,9 @@ describe('Сценарий 3', () => {
 
     expect(res.statusCode).toBe(404)
   })
-  it('Errors on the server side that occur during the processing of a request should be handled and processed correctly (server should answer with status code 500 and corresponding human-friendly message)', async () => {
+  it('Bad body for POST. Server should answer with status code 400', async () => {
     const res = await request(server).post(`/api/users`).send('error')
 
-    expect(res.statusCode).toBe(500)
+    expect(res.statusCode).toBe(400)
   })
 })
