@@ -8,7 +8,6 @@ export async function getUsers(req: IncomingMessage, res: ServerResponse) {
     const foundUsers = await User.findAll()
     sendJSON(200, foundUsers, res)
   } catch (error) {
-    console.error(error)
     sendJSON(
       500,
       {
@@ -31,7 +30,6 @@ export async function getUser(
 
     sendJSON(200, foundUser, res)
   } catch (error) {
-    console.error(error)
     sendJSON(
       500,
       {
@@ -63,7 +61,6 @@ export async function createUser(req: IncomingMessage, res: ServerResponse) {
     const createdNewUser = await User.create(rawUser)
     sendJSON(201, createdNewUser, res)
   } catch (error) {
-    console.error(error)
     sendJSON(
       500,
       {
@@ -96,7 +93,6 @@ export async function updateUser(
     const updatedUser = await User.updateById(id, rawUser)
     sendJSON(200, updatedUser, res)
   } catch (error) {
-    console.error(error)
     sendJSON(
       500,
       {
@@ -120,7 +116,6 @@ export async function deleteUser(
     await User.deleteById(id)
     sendJSON(204, { message: `user ${id} removed` }, res)
   } catch (error) {
-    console.error(error)
     sendJSON(
       500,
       {

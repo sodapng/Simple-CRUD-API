@@ -22,10 +22,7 @@ void (async () => {
     }
   } else {
     const id = cluster.worker?.id
-    const { server } = await import('./index')
-    server.on('request', (req, res) => {
-      res.setHeader('pid', pid)
-    })
+    await import('./index')
     console.log(`Worker: ${id}, pid: ${pid}`)
   }
 })()
